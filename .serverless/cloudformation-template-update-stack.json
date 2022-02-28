@@ -167,7 +167,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/calculator-serverless/dev/1645720051989-2022-02-24T16:27:31.989Z/calculator-serverless.zip"
+          "S3Key": "serverless/calculator-serverless/dev/1646039283875-2022-02-28T09:08:03.875Z/calculator-serverless.zip"
         },
         "Handler": "handler.hello",
         "Runtime": "nodejs12.x",
@@ -192,7 +192,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/calculator-serverless/dev/1645720051989-2022-02-24T16:27:31.989Z/calculator-serverless.zip"
+          "S3Key": "serverless/calculator-serverless/dev/1646039283875-2022-02-28T09:08:03.875Z/calculator-serverless.zip"
         },
         "Handler": "add.add",
         "Runtime": "nodejs12.x",
@@ -210,24 +210,24 @@
         "AddLogGroup"
       ]
     },
-    "HelloLambdaVersionRBznJwTUMzKcBWRZOvut2IOynlpiNe4qKssbmJx46g": {
+    "HelloLambdaVersion1cpeM5tpO4WyLGriJo1siE0IDNEwVHU2uBHAudbczs": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "HelloLambdaFunction"
         },
-        "CodeSha256": "kolFy7UF4lHiAFIEfMU9Xdhc6YX8rE5OT3nZJd78qcQ="
+        "CodeSha256": "UPy15uvU7SET4pQomXvoSIdH3FXcoILBcHAHwsTbYvM="
       }
     },
-    "AddLambdaVersion9KhRMyyjQIkTgKFR37KsER2J6618GT3g3kb2sZLd8gQ": {
+    "AddLambdaVersionvKIRPrCl4y8ClrvuazavMVr8wGscKcPs3fUZjoSz8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AddLambdaFunction"
         },
-        "CodeSha256": "kolFy7UF4lHiAFIEfMU9Xdhc6YX8rE5OT3nZJd78qcQ="
+        "CodeSha256": "UPy15uvU7SET4pQomXvoSIdH3FXcoILBcHAHwsTbYvM="
       }
     },
     "ApiGatewayRestApi": {
@@ -348,7 +348,7 @@
         "AddLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1645720026314": {
+    "ApiGatewayDeployment1646039273216": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -411,7 +411,7 @@
     "HelloLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HelloLambdaVersionRBznJwTUMzKcBWRZOvut2IOynlpiNe4qKssbmJx46g"
+        "Ref": "HelloLambdaVersion1cpeM5tpO4WyLGriJo1siE0IDNEwVHU2uBHAudbczs"
       },
       "Export": {
         "Name": "sls-calculator-serverless-dev-HelloLambdaFunctionQualifiedArn"
@@ -420,7 +420,7 @@
     "AddLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AddLambdaVersion9KhRMyyjQIkTgKFR37KsER2J6618GT3g3kb2sZLd8gQ"
+        "Ref": "AddLambdaVersionvKIRPrCl4y8ClrvuazavMVr8wGscKcPs3fUZjoSz8"
       },
       "Export": {
         "Name": "sls-calculator-serverless-dev-AddLambdaFunctionQualifiedArn"

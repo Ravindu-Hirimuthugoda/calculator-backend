@@ -8,7 +8,7 @@ module.exports.add = async (event,context) => {
             'Access-Control-Allow-Origin': '*'
         },
         body: JSON.stringify({
-            result: eval(num)
+            result: Function("return " + num)()
         }),
     };
 };

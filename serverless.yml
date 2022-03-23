@@ -9,15 +9,22 @@ provider:
   region: eu-west-1
   stage: dev
 
+plugins:
+  - serverless-offline
+
 
 functions:
-  hello:
-    handler: handler.hello
-
   add:
     handler: add.add
     events:
       - http:
           path: /add
+          method: post
+          cors: true
+  auth:
+    handler: auth.auth
+    events:
+      - http:
+          path: /auth
           method: post
           cors: true

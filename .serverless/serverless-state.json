@@ -84,16 +84,16 @@
               }
             }
           },
-          "HelloLogGroup": {
-            "Type": "AWS::Logs::LogGroup",
-            "Properties": {
-              "LogGroupName": "/aws/lambda/calculator-serverless-dev-hello"
-            }
-          },
           "AddLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
               "LogGroupName": "/aws/lambda/calculator-serverless-dev-add"
+            }
+          },
+          "AuthLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/calculator-serverless-dev-auth"
             }
           },
           "IamRoleLambdaExecution": {
@@ -173,31 +173,6 @@
               }
             }
           },
-          "HelloLambdaFunction": {
-            "Type": "AWS::Lambda::Function",
-            "Properties": {
-              "Code": {
-                "S3Bucket": {
-                  "Ref": "ServerlessDeploymentBucket"
-                },
-                "S3Key": "serverless/calculator-serverless/dev/1646039283875-2022-02-28T09:08:03.875Z/calculator-serverless.zip"
-              },
-              "Handler": "handler.hello",
-              "Runtime": "nodejs12.x",
-              "FunctionName": "calculator-serverless-dev-hello",
-              "MemorySize": 1024,
-              "Timeout": 6,
-              "Role": {
-                "Fn::GetAtt": [
-                  "IamRoleLambdaExecution",
-                  "Arn"
-                ]
-              }
-            },
-            "DependsOn": [
-              "HelloLogGroup"
-            ]
-          },
           "AddLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
@@ -205,7 +180,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/calculator-serverless/dev/1646039283875-2022-02-28T09:08:03.875Z/calculator-serverless.zip"
+                "S3Key": "serverless/calculator-serverless/dev/1648050986275-2022-03-23T15:56:26.275Z/calculator-serverless.zip"
               },
               "Handler": "add.add",
               "Runtime": "nodejs12.x",
@@ -223,24 +198,49 @@
               "AddLogGroup"
             ]
           },
-          "HelloLambdaVersion1cpeM5tpO4WyLGriJo1siE0IDNEwVHU2uBHAudbczs": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
+          "AuthLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
             "Properties": {
-              "FunctionName": {
-                "Ref": "HelloLambdaFunction"
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/calculator-serverless/dev/1648050986275-2022-03-23T15:56:26.275Z/calculator-serverless.zip"
               },
-              "CodeSha256": "UPy15uvU7SET4pQomXvoSIdH3FXcoILBcHAHwsTbYvM="
-            }
+              "Handler": "auth.auth",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "calculator-serverless-dev-auth",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "AuthLogGroup"
+            ]
           },
-          "AddLambdaVersionvKIRPrCl4y8ClrvuazavMVr8wGscKcPs3fUZjoSz8": {
+          "AddLambdaVersionrFt9eOmHnLfCAyBTgJUVdVdNRUSzVkYNNdsXEbw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AddLambdaFunction"
               },
-              "CodeSha256": "UPy15uvU7SET4pQomXvoSIdH3FXcoILBcHAHwsTbYvM="
+              "CodeSha256": "RNmaKeIXGo7eTryLDYIlx5SraA7IrXUPJxRC6DGRgSc="
+            }
+          },
+          "AuthLambdaVersionJneQzBE6JMCSGeuSOE3BQGSe3cZwVaiIi2qj1NpF4": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "AuthLambdaFunction"
+              },
+              "CodeSha256": "RNmaKeIXGo7eTryLDYIlx5SraA7IrXUPJxRC6DGRgSc="
             }
           },
           "ApiGatewayRestApi": {
@@ -265,6 +265,21 @@
                 ]
               },
               "PathPart": "add",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceAuth": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "auth",
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
@@ -309,6 +324,51 @@
               },
               "ResourceId": {
                 "Ref": "ApiGatewayResourceAdd"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodAuthOptions": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "AuthorizationType": "NONE",
+              "HttpMethod": "OPTIONS",
+              "MethodResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Access-Control-Allow-Headers": true,
+                    "method.response.header.Access-Control-Allow-Methods": true
+                  },
+                  "ResponseModels": {}
+                }
+              ],
+              "RequestParameters": {},
+              "Integration": {
+                "Type": "MOCK",
+                "RequestTemplates": {
+                  "application/json": "{statusCode:200}"
+                },
+                "ContentHandling": "CONVERT_TO_TEXT",
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": ""
+                    }
+                  }
+                ]
+              },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceAuth"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
@@ -361,7 +421,53 @@
               "AddLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1646039273216": {
+          "ApiGatewayMethodAuthPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceAuth"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "AuthLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "AuthLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayDeployment1648050963462": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -371,7 +477,9 @@
             },
             "DependsOn": [
               "ApiGatewayMethodAddOptions",
-              "ApiGatewayMethodAddPost"
+              "ApiGatewayMethodAuthOptions",
+              "ApiGatewayMethodAddPost",
+              "ApiGatewayMethodAuthPost"
             ]
           },
           "AddLambdaPermissionApiGateway": {
@@ -380,6 +488,43 @@
               "FunctionName": {
                 "Fn::GetAtt": [
                   "AddLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "AuthLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "AuthLambdaFunction",
                   "Arn"
                 ]
               },
@@ -421,22 +566,22 @@
               "Name": "sls-calculator-serverless-dev-ServerlessDeploymentBucketName"
             }
           },
-          "HelloLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "HelloLambdaVersion1cpeM5tpO4WyLGriJo1siE0IDNEwVHU2uBHAudbczs"
-            },
-            "Export": {
-              "Name": "sls-calculator-serverless-dev-HelloLambdaFunctionQualifiedArn"
-            }
-          },
           "AddLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AddLambdaVersionvKIRPrCl4y8ClrvuazavMVr8wGscKcPs3fUZjoSz8"
+              "Ref": "AddLambdaVersionrFt9eOmHnLfCAyBTgJUVdVdNRUSzVkYNNdsXEbw"
             },
             "Export": {
               "Name": "sls-calculator-serverless-dev-AddLambdaFunctionQualifiedArn"
+            }
+          },
+          "AuthLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "AuthLambdaVersionJneQzBE6JMCSGeuSOE3BQGSe3cZwVaiIi2qj1NpF4"
+            },
+            "Export": {
+              "Name": "sls-calculator-serverless-dev-AuthLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -551,19 +696,11 @@
       },
       "vpc": {}
     },
+    "plugins": [
+      "serverless-offline"
+    ],
     "pluginsData": {},
     "functions": {
-      "hello": {
-        "handler": "handler.hello",
-        "events": [],
-        "name": "calculator-serverless-dev-hello",
-        "package": {},
-        "memory": 1024,
-        "timeout": 6,
-        "runtime": "nodejs12.x",
-        "vpc": {},
-        "versionLogicalId": "HelloLambdaVersion1cpeM5tpO4WyLGriJo1siE0IDNEwVHU2uBHAudbczs"
-      },
       "add": {
         "handler": "add.add",
         "events": [
@@ -597,7 +734,42 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "AddLambdaVersionvKIRPrCl4y8ClrvuazavMVr8wGscKcPs3fUZjoSz8"
+        "versionLogicalId": "AddLambdaVersionrFt9eOmHnLfCAyBTgJUVdVdNRUSzVkYNNdsXEbw"
+      },
+      "auth": {
+        "handler": "auth.auth",
+        "events": [
+          {
+            "http": {
+              "path": "auth",
+              "method": "post",
+              "cors": {
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "POST"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "calculator-serverless-dev-auth",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "AuthLambdaVersionJneQzBE6JMCSGeuSOE3BQGSe3cZwVaiIi2qj1NpF4"
       }
     },
     "configValidationMode": "warn",
@@ -608,6 +780,9 @@
       "provider": {
         "$ref": "$[\"service\"][\"provider\"]"
       },
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
       }
@@ -617,7 +792,7 @@
     "artifact": "/home/ravindu/Desktop/Mentor/Calculator/calculator-serverless/.serverless/calculator-serverless.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/calculator-serverless/dev/1646039283875-2022-02-28T09:08:03.875Z",
+    "artifactDirectoryName": "serverless/calculator-serverless/dev/1648050986275-2022-03-23T15:56:26.275Z",
     "artifact": "calculator-serverless.zip"
   }
 }

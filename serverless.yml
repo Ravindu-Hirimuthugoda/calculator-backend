@@ -28,3 +28,38 @@ functions:
           path: /auth
           method: post
           cors: true
+  addition:
+    handler: addition.handler
+    events:
+      - http:
+          path: /addition
+          method: post
+          cors: true
+  subtraction:
+    handler: subtraction.handler
+    events:
+      - http:
+          path: /subtraction
+          method: post
+          cors: true
+  multiplication:
+    handler: multiplication.handler
+    events:
+      - http:
+          path: /multiplication
+          method: post
+          cors: true
+  division:
+    handler: division.handler
+    events:
+      - http:
+          path: /division
+          method: post
+          cors: true
+  authorizer:
+    handler: authorizor/authorizer.authorize
+    events:
+      - http:
+          path: /autho
+          method: get
+          cors: true

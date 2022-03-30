@@ -99,7 +99,20 @@ module.exports.getUSerContext = async (token) => {
       ":uid": userEmail,
     },
   };
+  
   //get the user from usertable from email
-  const data = await dynamodb.query(params).promise();
+  const userdata = await dynamodb.query(params).promise();
+  const roleParam = {
+    TableName: "role-mentoring",
+    KeyConditionExpression: "role_id = :roleid",
+    ExpressionAttributeValues: {
+      ":roleid": userdata.Items[0].role_id
+    }
+  };
+  const roledata = await dynamodb.query(roleParam).promise(); 
+  const data = {};
+  data.user_id = userdata.Items[0].user_id;
+  data.user_name = userdata.Items[0].user_name;
+  data.role_name = roledata.Items[0].name;
   return data;
 };

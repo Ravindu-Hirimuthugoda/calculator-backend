@@ -1,6 +1,6 @@
 service: calculator-serverless
 
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 provider:
   name: aws
@@ -11,7 +11,6 @@ provider:
 
 plugins:
   - serverless-offline
-
 
 functions:
   add:
@@ -35,6 +34,8 @@ functions:
           path: /addition
           method: post
           cors: true
+          authorizer: authorizerFunction
+
   subtraction:
     handler: subtraction.handler
     events:
@@ -42,6 +43,7 @@ functions:
           path: /subtraction
           method: post
           cors: true
+          authorizer: authorizerFunction
   multiplication:
     handler: multiplication.handler
     events:
@@ -49,6 +51,7 @@ functions:
           path: /multiplication
           method: post
           cors: true
+          authorizer: authorizerFunction
   division:
     handler: division.handler
     events:
@@ -56,10 +59,23 @@ functions:
           path: /division
           method: post
           cors: true
-  authorizer:
-    handler: authorizor/authorizer.authorize
+          authorizer: authorizerFunction
+
+  authorizerFunction:
+    handler: handler.authorize
+
+  auther:
+    handler: handler.authorize
     events:
       - http:
-          path: /autho
+          path: /auther
+          method: get
+          cors: true
+
+  usercontent:
+    handler: userContent.handler
+    events:
+      - http:
+          path: /user
           method: get
           cors: true

@@ -1,38 +1,38 @@
 {
-    "super_user":{
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Action": ["execute-api:Invoke"],
-                "Resource": [
-                    "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/addition",
-                    "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/division",
-                    "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/multiplication",
-                    "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/subtraction"
-                ]
-            }
+  "super_user": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": "execute-api:Invoke",
+        "Resource": [
+          "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/addition",
+          "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/division",
+          "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/multiplication",
+          "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/subtraction"
         ]
-    },
-    "normal_user":{
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Action": ["execute-api:Invoke"],
-                "Resource": [
-                    "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/addition",
-                    "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/subtraction"
-                ]
-            },
-            {
-                "Effect": "Deny",
-                "Action": ["execute-api:Invoke"],
-                "Resource":[
-                    "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/division",
-                    "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/multiplication"
-                ]
-            }
+      }
+    ]
+  },
+  "normal_user": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": ["execute-api:Invoke"],
+        "Resource": [
+          "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/addition",
+          "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/subtraction"
         ]
-    }
+      },
+      {
+        "Effect": "Deny",
+        "Action": ["execute-api:Invoke"],
+        "Resource": [
+          "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/division",
+          "arn:aws:execute-api:eu-west-1:203369548718:2a67uxwzf2/*/POST/multiplication"
+        ]
+      }
+    ]
+  }
 }

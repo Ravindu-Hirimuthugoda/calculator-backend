@@ -1,7 +1,7 @@
 "use strict";
 
 const helper = require("./helper");
-const config = require('./policy.json');
+const config = require("./policy.json");
 
 //ISS indicates the identity of the party that issued the JWT
 
@@ -16,25 +16,24 @@ module.exports.authorize = async (token) => {
     pems = helper.getPems(jwks);
     //console.log(pems);
     //console.log(helper.validateToken(id_token,pems,ISS));
-    return helper.validateToken(id_token, pems, ISS);
+    return helper.validateToken(token, pems, ISS);
   });
 
   if (isAuthenticted === "Authorized User") {
-    user = await (await helper.getUSerContext(id_token));
+    user = await await helper.getUSerContext(token);
     console.log(user);
     const policyDoc = {
       principalId: user.user_id,
       policyDocument: config[user.role_name],
-      context:{
+      context: {
         email: user.user_id,
         name: user.user_name,
-        role: user.role_name
-      }
+        role: user.role_name,
+      },
     };
     return policyDoc;
-  }else{
-    console.log('Unauthenticated');
+  } else {
+    console.log("Unauthenticated");
     return;
   }
-  
 };

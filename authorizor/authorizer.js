@@ -23,7 +23,7 @@ module.exports.authorize = async (token) => {
     user = await await helper.getUSerContext(token);
     console.log(user);
     const policyDoc = {
-      principalId: user.user_id,
+      principalId: "token",
       policyDocument: config[user.role_name],
       context: {
         email: user.user_id,

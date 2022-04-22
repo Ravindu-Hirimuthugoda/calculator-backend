@@ -20,13 +20,18 @@ functions:
           path: /add
           method: post
           cors: true
+
   auth:
     handler: auth.auth
+    environment:
+      CLIENT_ID: ${ssm:/calculator/dev/clientId}
+      URL: ${ssm:/calculator/dev/oAuthurl}
     events:
       - http:
           path: /auth
           method: post
           cors: true
+
   addition:
     handler: addition.handler
     events:
@@ -44,6 +49,7 @@ functions:
           method: post
           cors: true
           authorizer: authorizerFunction
+
   multiplication:
     handler: multiplication.handler
     events:
@@ -52,6 +58,7 @@ functions:
           method: post
           cors: true
           authorizer: authorizerFunction
+
   division:
     handler: division.handler
     events:
@@ -63,9 +70,13 @@ functions:
 
   authorizerFunction:
     handler: handler.authorize
+    environment:
+      ISS: ${ssm:/calculator/dev/ISS}
 
   auther:
     handler: handler.authorize
+    environment:
+      ISS: ${ssm:/calculator/dev/ISS}
     events:
       - http:
           path: /auther

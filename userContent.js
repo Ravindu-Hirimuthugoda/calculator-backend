@@ -6,7 +6,8 @@ AWS.config.update({ region: "eu-west-1" });
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.handler = async (event, context) => {
-  const id_token = event.headers.Id_token;
+  // console.log(event.headers);
+  const id_token = event.headers.authorization || event.headers.Authorization;
   let decodedToken = jwt.decode(id_token);
   let userEmail = decodedToken.email.toLowerCase();
   let params = {

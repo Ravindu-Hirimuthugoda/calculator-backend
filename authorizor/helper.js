@@ -7,13 +7,9 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 //A JSON Web Key (JWK) is a JSON data structure that represents a set of public keys
 
-const ISS = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_LIN377rkm";
-
 module.exports.getJWKs = async (jwkPath) => {
   var jwks = await axios
-    .get(
-      "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_LIN377rkm/.well-known/jwks.json"
-    )
+    .get(`${jwkPath}/.well-known/jwks.json`)
     .then(({ data }) => {
       return data["keys"];
     })
@@ -99,17 +95,17 @@ module.exports.getUSerContext = async (token) => {
       ":uid": userEmail,
     },
   };
-  
+
   //get the user from usertable from email
   const userdata = await dynamodb.query(params).promise();
   const roleParam = {
     TableName: "role-mentoring",
     KeyConditionExpression: "role_id = :roleid",
     ExpressionAttributeValues: {
-      ":roleid": userdata.Items[0].role_id
-    }
+      ":roleid": userdata.Items[0].role_id,
+    },
   };
-  const roledata = await dynamodb.query(roleParam).promise(); 
+  const roledata = await dynamodb.query(roleParam).promise();
   const data = {};
   data.user_id = userdata.Items[0].user_id;
   data.user_name = userdata.Items[0].user_name;
